@@ -30,7 +30,6 @@ youtube-search-python
 dateparser
 speedtest-cli
 python-binary-memcached
-pytest
 rotten_tomatoes_client
 cryptocompare==0.7.3
 markdown
