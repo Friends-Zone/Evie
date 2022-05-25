@@ -65,8 +65,6 @@ async def close_ws(event):
         if not await can_change_info(message=event):
             await event.reply('You need to me an admin with change_info rights to do this.')
             return
-        else:
-            pass
     if is_nightmode_indb(str(event.chat_id)):
         await event.reply("This Chat is Has Already Enabled Night Mode.")
         return
@@ -78,12 +76,9 @@ async def disable_ws(event):
     if not event.is_group:
         await event.reply("You Can Only Disable Night Mode in Groups.")
         return
-    if event.is_group:
-        if not await can_change_info(message=event):
-            await event.reply('You need to me an admin with change_info rights to do this.')
-            return
-        else:
-            pass
+    if not await can_change_info(message=event):
+        await event.reply('You need to me an admin with change_info rights to do this.')
+        return
     if not is_nightmode_indb(str(event.chat_id)):
         await event.reply("This Chat is Has Not Enabled Night Mode.")
         return

@@ -51,7 +51,7 @@ async def virusscan(event):
         await event.client.download_file(c, virus)
         gg = await event.reply("Scanning the file ...")
         fsize = c.file.size
-        if not fsize <= 3145700:  # MAX = 3MB
+        if fsize > 3145700:  # MAX = 3MB
             await gg.edit("File size exceeds 3MB")
             return
         api_response = api_instance.scan_file_advanced(

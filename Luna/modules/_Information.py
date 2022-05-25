@@ -21,11 +21,8 @@ async def who(event):
 async def useridgetter(event):
     message = await event.get_reply_message()
     inp = event.pattern_match.group(1)
-    if not message:
-        if inp:
-            pass
-        else:
-            await event.reply("Chat ID: `" + str(event.chat_id) + "`")
+    if not message and not inp:
+        await event.reply(f"Chat ID: `{str(event.chat_id)}`")
     if message:
         if not message.forward:
             user_id = message.sender.id
@@ -33,7 +30,7 @@ async def useridgetter(event):
         else:
             user_id = message.forward.sender.id
             name = message.forward.sender.first_name
-        await event.reply("User {}'s id is `{}`.".format(name, user_id))
+        await event.reply(f"User {name}'s id is `{user_id}`.")
 
 
 async def get_user(event):
@@ -67,35 +64,35 @@ async def get_user(event):
     return replied_user
 
 async def detail(replied_user, event):
- try:
-    user_id = replied_user.user.id
-    first_name = replied_user.user.first_name
-    last_name = replied_user.user.last_name
-    username = replied_user.user.username
-    first_name = (
-        first_name.replace("\u2060", "")
-    )
-    last_name = (
-        last_name.replace("\u2060", "") if last_name else None
-    )
-    username = "@{}".format(username) if username else None
+    try:
+        user_id = replied_user.user.id
+        first_name = replied_user.user.first_name
+        last_name = replied_user.user.last_name
+        username = replied_user.user.username
+        first_name = (
+            first_name.replace("\u2060", "")
+        )
+        last_name = (
+            last_name.replace("\u2060", "") if last_name else None
+        )
+        username = f"@{username}" if username else None
 
-    caption = "<b>User Info:</b> \n"
-    caption += f"ID: <code>{user_id}</code> \n"
-    caption += f"First Name: {first_name} \n"
-    if last_name:
-      caption += f"Last Name: {last_name} \n"
-    if username:
-      caption += f"Username: {username} \n"
-    caption += f'User link: <a href="tg://user?id={user_id}">link</a>'
-    if user_id in sudo:
-        caption += "\nStatus: <b>Sudo User</b>"
-    if user_id in dev:
-        caption += "\nStatus: <b>Dev User</b>"
-    if user_id == owner:
-        caption += "\nStatus: <b>Owner</b>"
-    if user_id == 1624337697:
-        caption += "\nStatus: <b>Itz Me</b>"
-    return caption
- except Exception:
-        print("lel")
+        caption = "<b>User Info:</b> \n"
+        caption += f"ID: <code>{user_id}</code> \n"
+        caption += f"First Name: {first_name} \n"
+        if last_name:
+          caption += f"Last Name: {last_name} \n"
+        if username:
+          caption += f"Username: {username} \n"
+        caption += f'User link: <a href="tg://user?id={user_id}">link</a>'
+        if user_id in sudo:
+            caption += "\nStatus: <b>Sudo User</b>"
+        if user_id in dev:
+            caption += "\nStatus: <b>Dev User</b>"
+        if user_id == owner:
+            caption += "\nStatus: <b>Owner</b>"
+        if user_id == 1624337697:
+            caption += "\nStatus: <b>Itz Me</b>"
+        return caption
+    except Exception:
+           print("lel")

@@ -14,7 +14,6 @@ from Luna.events import bot as register
 
 @register(pattern="^/rmbg")
 async def _(event):
-    HELP_STR = "use `/rmbg` as reply to a media"
     if event.fwd_from:
         return
     if REM_BG_API_KEY is None:
@@ -37,6 +36,7 @@ async def _(event):
             output_file_name = ReTrieveFile(downloaded_file_name)
             os.remove(downloaded_file_name)
     else:
+        HELP_STR = "use `/rmbg` as reply to a media"
         await event.reply(HELP_STR)
         return
     contentType = output_file_name.headers.get("content-type")
@@ -54,7 +54,7 @@ async def _(event):
         await k.delete()
         end = datetime.now()
         ms = (end - start).seconds
-        m = await event.reply("Background Removed in {} seconds".format(ms))
+        m = await event.reply(f"Background Removed in {ms} seconds")
         await asyncio.sleep(3)
         await m.delete()
     else:
@@ -72,14 +72,13 @@ def ReTrieveFile(input_file_name):
     files = {
         "image_file": (input_file_name, open(input_file_name, "rb")),
     }
-    r = requests.post(
+    return requests.post(
         "https://api.remove.bg/v1.0/removebg",
         headers=headers,
         files=files,
         allow_redirects=True,
         stream=True,
     )
-    return r
 
 
 file_help = os.path.basename(__file__)

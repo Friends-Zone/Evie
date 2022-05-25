@@ -24,7 +24,7 @@ async def _(event):
             parse_mode="html",
         )
     except PageError as e:
-        await event.reply("<code>{}</code>".format(e), parse_mode="html")
+        await event.reply(f"<code>{e}</code>", parse_mode="html")
     if res:
         result = f"<b>{search}</b>\n\n"
         result += f"<i>{res}</i>\n"

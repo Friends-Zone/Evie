@@ -36,24 +36,19 @@ chat = -1001309757591
 async def _(event):
     if event.fwd_from:
         return
-    if event.sender_id == OWNER_ID:
-        pass
-    elif event.sender_id in SUDO_USERS:
-        pass
-    elif event.sender_id in DEV_USERS:
-        pass
-    else:
+    if (
+        event.sender_id != OWNER_ID
+        and event.sender_id not in SUDO_USERS
+        and event.sender_id not in DEV_USERS
+    ):
         return
     quew = event.pattern_match.group(1)
     if event.reply_to_msg_id:
-       reply_message = await event.get_reply_message()
-       k = reply_message.sender_id
-       cid = k
-       if quew == None:
-           reason = "None"
-       else:
-           reason = quew
-       user = reply_message.sender.first_name
+        reply_message = await event.get_reply_message()
+        k = reply_message.sender_id
+        cid = k
+        reason = "None" if quew is None else quew
+        user = reply_message.sender.first_name
     if not event.reply_to_msg_id:
         if "|" in quew:
           iid, reasonn = quew.split("|")
@@ -150,24 +145,19 @@ async def _(event):
 async def _(event):
     if event.fwd_from:
         return
-    if event.sender_id == OWNER_ID:
-        pass
-    elif event.sender_id in SUDO_USERS:
-        pass
-    elif event.sender_id in DEV_USERS:
-        pass
-    else:
+    if (
+        event.sender_id != OWNER_ID
+        and event.sender_id not in SUDO_USERS
+        and event.sender_id not in DEV_USERS
+    ):
         return
     quew = event.pattern_match.group(1)
     if event.reply_to_msg_id:
-       reply_message = await event.get_reply_message()
-       k = reply_message.sender_id
-       cid = k
-       if quew == None:
-           reason = "None"
-       else:
-           reason = quew
-       user = reply_message.sender.first_name
+        reply_message = await event.get_reply_message()
+        k = reply_message.sender_id
+        cid = k
+        reason = "None" if quew is None else quew
+        user = reply_message.sender.first_name
     if not event.reply_to_msg_id:
         if "|" in quew:
           iid, reasonn = quew.split("|")
@@ -241,10 +231,9 @@ async def _(event):
 @tbot.on(events.ChatAction())
 async def join_ban(event):
     if event.is_private: 
-        return 
-    if event.chat_id == int(-1001486931338):
         return
-    pass
+    if event.chat_id == -1001486931338:
+        return
     user = event.user_id
     if user == OWNER_ID:
        await client.send_file(event.chat_id, file='AgADBQADEqwxG4Le2Fbjy1e1eAudcxGbD290AAvLSQMAAQI')
@@ -299,19 +288,17 @@ from telethon import events
 
 @register(pattern="^/gmute ?(.*)")
 async def gmute(event):
-    if event.sender_id == OWNER_ID:
-       pass
-    elif event.sender_id in DEV_USERS:
-       pass
-    elif event.sender_id in SUDO_USERS:
-       pass
-    else:
-      return
+    if (
+        event.sender_id != OWNER_ID
+        and event.sender_id not in DEV_USERS
+        and event.sender_id not in SUDO_USERS
+    ):
+        return
     reply = await event.get_reply_message()
     userid = reply.sender_id
     if userid == OWNER_ID:
-         await event.reply("I can Act on my master")
-         return
+        await event.reply("I can Act on my master")
+        return
     elif userid == BOT_ID:
          await event.reply("Ya I'm not gonna mute myself;")
          return
@@ -321,8 +308,6 @@ async def gmute(event):
     elif userid in DEV_USERS:
          await event.reply("Nope Can't mute my Dev")
          return
-    else:
-         pass
     if is_muted(userid, "gmute"):
         return await event.reply("This user is already gmuted")
     try:
@@ -334,19 +319,17 @@ async def gmute(event):
 
 @register(pattern="^/ungmute ?(.*)")
 async def ungmute(event):
-    if event.sender_id == OWNER_ID:
-       pass
-    elif event.sender_id in DEV_USERS:
-       pass
-    elif event.sender_id in SUDO_USERS:
-       pass
-    else:
-      return
+    if (
+        event.sender_id != OWNER_ID
+        and event.sender_id not in DEV_USERS
+        and event.sender_id not in SUDO_USERS
+    ):
+        return
     reply = await event.get_reply_message()
     userid = reply.sender_id
     if userid == OWNER_ID:
-         await event.reply("I can Act on my master")
-         return
+        await event.reply("I can Act on my master")
+        return
     elif userid == BOT_ID:
          await event.reply("Ya I'm not gonna ungmute myself;")
          return
@@ -356,8 +339,6 @@ async def ungmute(event):
     elif userid in DEV_USERS:
          await event.reply("Nope Can't. my Dev!")
          return
-    else:
-         pass
     if not is_muted(userid, "gmute"):
         return await event.reply("This user is not gmuted")
     try:

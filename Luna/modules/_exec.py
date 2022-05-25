@@ -18,19 +18,14 @@ from telethon.errors import *
 async def msg(event):
     if event.sender_id == OWNER_ID:
         pass
-    elif event.sender_id in SUDO_USERS:
-        await event.reply("This is a Assembler restricted command. You do not have permissions to run this.")
-        return
-    elif event.sender_id in DEV_USERS:
+    elif event.sender_id in SUDO_USERS or event.sender_id in DEV_USERS:
         await event.reply("This is a Assembler restricted command. You do not have permissions to run this.")
         return
     else:
         return
     PROCESS_RUN_TIME = 100
     cmd = event.pattern_match.group(1)
-    reply_to_id = event.message.id
-    if event.reply_to_msg_id:
-        reply_to_id = event.reply_to_msg_id
+    reply_to_id = event.reply_to_msg_id or event.message.id
     time.time() + PROCESS_RUN_TIME
     process = await asyncio.create_subprocess_shell(
         cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
@@ -45,8 +40,8 @@ async def msg(event):
     else:
         _o = o.split("\n")
         o = "`\n".join(_o)
-    await event.reply(f"**QUERY:**\n__Command:__\n`{cmd}` \n__PID:__\n`{process.pid}`\n\n**stderr:** \n`{e}`\n**Output:**\n{o}"
-)
+        await event.reply(f"**QUERY:**\n__Command:__\n`{cmd}` \n__PID:__\n`{process.pid}`\n\n**stderr:** \n`{e}`\n**Output:**\n{o}"
+    )
 
 @register(pattern="^/eval")
 async def _(event):
@@ -65,17 +60,13 @@ async def _(event):
         if "from Luna import abot" in cmd or "from Luna import STRING_SESSION" in cmd:
           await event.reply("Can't Acess Master Account.")
           return
-        if "await tbot.send_message" in cmd or "from Luna import STRING_SESSION" in cmd:
-          await event.reply("Ni Hoskta!")
-          return
-        pass
+        if "await tbot.send_message" in cmd:
+            await event.reply("Ni Hoskta!")
+            return
     else:
         return
-    
-    reply_to_id = event.message.id
-    if event.reply_to_msg_id:
-        reply_to_id = event.reply_to_msg_id
 
+    reply_to_id = event.reply_to_msg_id or event.message.id
     old_stderr = sys.stderr
     old_stdout = sys.stdout
     redirected_output = sys.stdout = io.StringIO()
@@ -100,7 +91,7 @@ async def _(event):
         evaluation = stdout
     else:
         evaluation = "Success"
-    final_output = "`{}`".format(evaluation)
+    final_output = f"`{evaluation}`"
     MAX_MESSAGE_SIZE_LIMIT = 4095
     if len(final_output) > MAX_MESSAGE_SIZE_LIMIT:
         with io.BytesIO(str.encode(final_output)) as out_file:
@@ -142,10 +133,7 @@ async def _(event):
     if int(check) != int(OWNER_ID):
         return
     cmd = event.text.split(" ", maxsplit=1)[1]
-    reply_to_id = event.message.id
-    if event.reply_to_msg_id:
-        reply_to_id = event.reply_to_msg_id
-
+    reply_to_id = event.reply_to_msg_id or event.message.id
     old_stderr = sys.stderr
     old_stdout = sys.stdout
     redirected_output = sys.stdout = io.StringIO()

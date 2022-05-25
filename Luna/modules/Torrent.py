@@ -43,7 +43,7 @@ async def paginate_news(event):
     if "|" in meta:
         sender, search, index, chatid, msgid = meta.split("|")
     sender = int(sender.strip())
-    if not event.sender_id == sender:
+    if event.sender_id != sender:
         await event.answer("You haven't send that command !")
         return
     search = search.strip()
@@ -61,13 +61,13 @@ async def paginate_news(event):
         print(e)
         return
     # print(results)
-    age = results[int(num)].get("age")
-    leech = results[int(num)].get("leecher")
-    mag = results[int(num)].get("magnet")
-    name = results[int(num)].get("name")
-    seed = results[int(num)].get("seeder")
-    size = results[int(num)].get("size")
-    typ = results[int(num)].get("type")
+    age = results[num].get("age")
+    leech = results[num].get("leecher")
+    mag = results[num].get("magnet")
+    name = results[num].get("name")
+    seed = results[num].get("seeder")
+    size = results[num].get("size")
+    typ = results[num].get("type")
     header = f"**#{num} **"
     lastisthis = f"{header} **Name:** {name}\n**Uploaded:** {age} ago\n**Seeders:** {seed}\n**Leechers:** {leech}\n**Size:** {size}\n**Type:** {typ}\n**Magnet Link:** `{mag}`"
     await tbot.edit_message(
@@ -104,7 +104,7 @@ async def paginate_prevtorrent(event):
     if "|" in meta:
         sender, search, index, chatid, msgid = meta.split("|")
     sender = int(sender.strip())
-    if not event.sender_id == sender:
+    if event.sender_id != sender:
         await event.answer("You haven't send that command !")
         return
     search = search.strip()
@@ -121,8 +121,8 @@ async def paginate_prevtorrent(event):
         )
         print(e)
         return
-    vector = len(results)
     if num < 0:
+        vector = len(results)
         num = vector - 1
     # print(results)
     age = results[int(num)].get("age")
@@ -168,7 +168,7 @@ async def paginate_nexttorrent(event):
     if "|" in meta:
         sender, search, index, chatid, msgid = meta.split("|")
     sender = int(sender.strip())
-    if not event.sender_id == sender:
+    if event.sender_id != sender:
         await event.answer("You haven't send that command !")
         return
     search = search.strip()
@@ -234,7 +234,7 @@ async def torrentstop(event):
     sender = int(sender.strip())
     chatid = int(chatid.strip())
     msgid = int(msgid.strip())
-    if not event.sender_id == sender:
+    if event.sender_id != sender:
         await event.answer("You haven't send that command !")
         return
     await tbot.edit_message(
@@ -255,7 +255,7 @@ async def paginate_nexttorrent(event):
     if "|" in meta:
         sender, search, chatid, msgid = meta.split("|")
     sender = int(sender.strip())
-    if not event.sender_id == sender:
+    if event.sender_id != sender:
         await event.answer("You haven't send that command !")
         return
     search = search.strip()
@@ -275,13 +275,13 @@ async def paginate_nexttorrent(event):
     if num > vector - 1:
         num = 0
     # print(results)
-    age = results[int(num)].get("age")
-    leech = results[int(num)].get("leecher")
-    mag = results[int(num)].get("magnet")
-    name = results[int(num)].get("name")
-    seed = results[int(num)].get("seeder")
-    size = results[int(num)].get("size")
-    typ = results[int(num)].get("type")
+    age = results[num].get("age")
+    leech = results[num].get("leecher")
+    mag = results[num].get("magnet")
+    name = results[num].get("name")
+    seed = results[num].get("seeder")
+    size = results[num].get("size")
+    typ = results[num].get("type")
     header = f"**#{num} **"
     lastisthis = f"{header} **Name:** {name}\n**Uploaded:** {age} ago\n**Seeders:** {seed}\n**Leechers:** {leech}\n**Size:** {size}\n**Type:** {typ}\n**Magnet Link:** `{mag}`"
     await tbot.edit_message(

@@ -39,34 +39,34 @@ async def alive(event):
       k = await event.reply("**Wait for Result.**")
       start_time = datetime.datetime.now()
       async with ubot.conversation("@Carol5_bot") as bot_conv:
-          await bot_conv.send_message(f"/key {ok}")
-          await asyncio.sleep(6)
-          response = await bot_conv.get_response()
-          await event.delete()
-          end_time = datetime.datetime.now()
-          pingtime = end_time - start_time
-          time = str(round(pingtime.total_seconds(), 2)) + "s"
-          if "Invalid" in response.text:
-                reply = f"SK Key : {ok}\n"
-                reply += "Result: Invalid API Key\n"
-                reply += "RESPONSE: ❌Invalid Key❌\n"
-                reply += f"Time: {time}\n"
-                reply += f"Checked By **{fname}**"
-          elif "Test" in response.text:
-                reply = f"SK Key : sk_live_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n"
-                reply += "Result: Test mode Key\n"
-                reply += "RESPONSE: ❌Test Mode Key❌\n"
-                reply += f"Time: {time}\n"
-                reply += f"Checked By **{fname}**"
-          elif "Valid" in response.text:
-                reply = f"SK Key : sk_live_xxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n"
-                reply += "Result: LIVE\n"
-                reply += "RESPONSE: ✅Valid Key\n"
-                reply += f"Time: {time}\n"
-                reply += f"Checked By **{fname}**"
-          else:
-                reply = "Error, Report @LunaBotSupport"
-          await k.edit(reply)        
+            await bot_conv.send_message(f"/key {ok}")
+            await asyncio.sleep(6)
+            response = await bot_conv.get_response()
+            await event.delete()
+            end_time = datetime.datetime.now()
+            pingtime = end_time - start_time
+            time = f"{str(round(pingtime.total_seconds(), 2))}s"
+            if "Invalid" in response.text:
+                  reply = f"SK Key : {ok}\n"
+                  reply += "Result: Invalid API Key\n"
+                  reply += "RESPONSE: ❌Invalid Key❌\n"
+                  reply += f"Time: {time}\n"
+                  reply += f"Checked By **{fname}**"
+            elif "Test" in response.text:
+                  reply = f"SK Key : sk_live_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n"
+                  reply += "Result: Test mode Key\n"
+                  reply += "RESPONSE: ❌Test Mode Key❌\n"
+                  reply += f"Time: {time}\n"
+                  reply += f"Checked By **{fname}**"
+            elif "Valid" in response.text:
+                  reply = f"SK Key : sk_live_xxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n"
+                  reply += "Result: LIVE\n"
+                  reply += "RESPONSE: ✅Valid Key\n"
+                  reply += f"Time: {time}\n"
+                  reply += f"Checked By **{fname}**"
+            else:
+                  reply = "Error, Report @LunaBotSupport"
+            await k.edit(reply)        
 
 
 @register(pattern="^/ss (.*)")
@@ -185,24 +185,23 @@ async def alive(event):
       k = await event.reply("**Wait for Result.**")
       ok = event.pattern_match.group(1)
       async with ubot.conversation("@Carol5_bot") as bot_conv:
-          await bot_conv.send_message(f"/bin {ok}")
-          await asyncio.sleep(5)
-          response = await bot_conv.get_response()
-          res = response.text
-          if "❌" in res:
-               text = '🤬❌ INVALID BIN ❌🤬\n'
-               text += f'Checked By **{fname}**'
-               await k.edit(text)
-          else:
-               text = f'{res.splitlines()[0]}\n'
-               text += f'{res.splitlines()[1]}\n'
-               text += f'{res.splitlines()[2]}\n'
-               text += f'{res.splitlines()[3]}\n'
-               text += f'{res.splitlines()[4]}\n'
-               text += f'{res.splitlines()[5]}\n'
-               text += f'{res.splitlines()[6]}\n'
-               text += f'Checked By **{fname}**'
-               await k.edit(text)
+            await bot_conv.send_message(f"/bin {ok}")
+            await asyncio.sleep(5)
+            response = await bot_conv.get_response()
+            res = response.text
+            if "❌" in res:
+                  text = '🤬❌ INVALID BIN ❌🤬\n'
+            else:
+                  text = f'{res.splitlines()[0]}\n'
+                  text += f'{res.splitlines()[1]}\n'
+                  text += f'{res.splitlines()[2]}\n'
+                  text += f'{res.splitlines()[3]}\n'
+                  text += f'{res.splitlines()[4]}\n'
+                  text += f'{res.splitlines()[5]}\n'
+                  text += f'{res.splitlines()[6]}\n'
+
+            text += f'Checked By **{fname}**'
+            await k.edit(text)
 
 
 file_help = os.path.basename(__file__)

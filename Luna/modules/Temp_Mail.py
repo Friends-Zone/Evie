@@ -43,7 +43,7 @@ async def _(event):
             if event.sender_id == c["user"]:
                 addr = get_email(event.sender_id)
                 ttime = addr["time"]
-                if not ttime - time.time() > 86400:  # 24 hrs
+                if ttime - time.time() <= 86400:  # 24 hrs
                     await event.reply(
                         "You have recently created a new email address, wait for 24hrs to change it"
                     )
@@ -151,7 +151,7 @@ async def _(event):
     sender = int(sender.strip())
     chatid = int(chatid.strip())
     msgid = int(msgid.strip())
-    if not event.sender_id == sender:
+    if event.sender_id != sender:
         await event.answer("You haven't send that command !")
         return
     await tbot.edit_message(chatid, msgid, "Thanks for using Luna 😘")
@@ -168,7 +168,7 @@ async def _(event):
     if "|" in meta:
         sender, index, chatid, msgid = meta.split("|")
     sender = int(sender.strip())
-    if not event.sender_id == sender:
+    if event.sender_id != sender:
         await event.answer("You haven't send that command !")
         return
     index = int(index.strip())
@@ -185,12 +185,12 @@ async def _(event):
                 await tbot.edit_message(chatid, msgid, "There are no emails yet.")
                 return
     header = f"**#{num} **"
-    from_mail = mails[int(num)]["mail_from"]
-    subject = mails[int(num)]["mail_subject"]
-    msg = mails[int(num)]["mail_text"]
-    ttime = mails[int(num)]["mail_timestamp"]
-    mail_id = mails[int(num)]["mail_id"]
-    attch = int(mails[int(num)]["mail_attachments_count"])
+    from_mail = mails[num]["mail_from"]
+    subject = mails[num]["mail_subject"]
+    msg = mails[num]["mail_text"]
+    ttime = mails[num]["mail_timestamp"]
+    mail_id = mails[num]["mail_id"]
+    attch = int(mails[num]["mail_attachments_count"])
     timestamp = ttime
     dt_object = datetime.fromtimestamp(timestamp)
     ttime = str(dt_object)
@@ -205,18 +205,10 @@ async def _(event):
     final = markdown.markdown(nheaders)
     response = telegraph.create_page(subject, html_content=final)
 
-    tlink = "https://telegra.ph/{}".format(response["path"])
+    tlink = f'https://telegra.ph/{response["path"]}'
 
-    if not attch > 0:
-        lastisthis = (
-            f"{header}MAIL FROM: {from_mail}"
-            + "\n"
-            + f"TO: {email}"
-            + "\n"
-            + f"DATE: `{ttime}`"
-        )
-    else:
-        lastisthis = (
+    lastisthis = (
+        (
             f"{header}MAIL FROM: {from_mail}"
             + "\n"
             + f"TO: {email}"
@@ -225,6 +217,16 @@ async def _(event):
             + "\n\n"
             + "**The attachments will be send to you shortly !**"
         )
+        if attch > 0
+        else (
+            f"{header}MAIL FROM: {from_mail}"
+            + "\n"
+            + f"TO: {email}"
+            + "\n"
+            + f"DATE: `{ttime}`"
+        )
+    )
+
     await tbot.edit_message(
         chatid,
         msgid,
@@ -277,7 +279,7 @@ async def _(event):
     if "|" in meta:
         sender, index, chatid, msgid = meta.split("|")
     sender = int(sender.strip())
-    if not event.sender_id == sender:
+    if event.sender_id != sender:
         await event.answer("You haven't send that command !")
         return
 
@@ -294,8 +296,8 @@ async def _(event):
             if value == "There are no emails yet":
                 await tbot.edit_message(chatid, msgid, "There are no emails yet.")
                 return
-    vector = len(mails)
     if num < 0:
+        vector = len(mails)
         num = vector - 1
     # print(vector)
     # print(num)
@@ -322,17 +324,9 @@ async def _(event):
     final = markdown.markdown(nheaders)
     response = telegraph.create_page(subject, html_content=final)
 
-    tlink = "https://telegra.ph/{}".format(response["path"])
-    if not attch > 0:
-        lastisthis = (
-            f"{header}MAIL FROM: {from_mail}"
-            + "\n"
-            + f"TO: {email}"
-            + "\n"
-            + f"DATE: `{ttime}`"
-        )
-    else:
-        lastisthis = (
+    tlink = f'https://telegra.ph/{response["path"]}'
+    lastisthis = (
+        (
             f"{header}MAIL FROM: {from_mail}"
             + "\n"
             + f"TO: {email}"
@@ -341,6 +335,16 @@ async def _(event):
             + "\n\n"
             + "**The attachments will be send to you shortly !**"
         )
+        if attch > 0
+        else (
+            f"{header}MAIL FROM: {from_mail}"
+            + "\n"
+            + f"TO: {email}"
+            + "\n"
+            + f"DATE: `{ttime}`"
+        )
+    )
+
     await tbot.edit_message(
         chatid,
         msgid,
@@ -393,7 +397,7 @@ async def _(event):
     if "|" in meta:
         sender, index, chatid, msgid = meta.split("|")
     sender = int(sender.strip())
-    if not event.sender_id == sender:
+    if event.sender_id != sender:
         await event.answer("You haven't send that command !")
         return
 
@@ -438,17 +442,9 @@ async def _(event):
     final = markdown.markdown(nheaders)
     response = telegraph.create_page(subject, html_content=final)
 
-    tlink = "https://telegra.ph/{}".format(response["path"])
-    if not attch > 0:
-        lastisthis = (
-            f"{header}MAIL FROM: {from_mail}"
-            + "\n"
-            + f"TO: {email}"
-            + "\n"
-            + f"DATE: `{ttime}`"
-        )
-    else:
-        lastisthis = (
+    tlink = f'https://telegra.ph/{response["path"]}'
+    lastisthis = (
+        (
             f"{header}MAIL FROM: {from_mail}"
             + "\n"
             + f"TO: {email}"
@@ -457,6 +453,16 @@ async def _(event):
             + "\n\n"
             + "**The attachments will be send to you shortly !**"
         )
+        if attch > 0
+        else (
+            f"{header}MAIL FROM: {from_mail}"
+            + "\n"
+            + f"TO: {email}"
+            + "\n"
+            + f"DATE: `{ttime}`"
+        )
+    )
+
     await tbot.edit_message(
         chatid,
         msgid,
@@ -509,7 +515,7 @@ async def _(event):
     if "|" in meta:
         sender, chatid, msgid = meta.split("|")
     sender = int(sender.strip())
-    if not event.sender_id == sender:
+    if event.sender_id != sender:
         await event.answer("You haven't send that command !")
         return
 
@@ -531,12 +537,12 @@ async def _(event):
     # print(vector)
     # print(num)
     header = f"**#{num} **"
-    from_mail = mails[int(num)]["mail_from"]
-    subject = mails[int(num)]["mail_subject"]
-    msg = mails[int(num)]["mail_text"]
-    ttime = mails[int(num)]["mail_timestamp"]
-    mail_id = mails[int(num)]["mail_id"]
-    attch = int(mails[int(num)]["mail_attachments_count"])
+    from_mail = mails[num]["mail_from"]
+    subject = mails[num]["mail_subject"]
+    msg = mails[num]["mail_text"]
+    ttime = mails[num]["mail_timestamp"]
+    mail_id = mails[num]["mail_id"]
+    attch = int(mails[num]["mail_attachments_count"])
     timestamp = ttime
     dt_object = datetime.fromtimestamp(timestamp)
     ttime = str(dt_object)
@@ -553,17 +559,9 @@ async def _(event):
     final = markdown.markdown(nheaders)
     response = telegraph.create_page(subject, html_content=final)
 
-    tlink = "https://telegra.ph/{}".format(response["path"])
-    if not attch > 0:
-        lastisthis = (
-            f"{header}MAIL FROM: {from_mail}"
-            + "\n"
-            + f"TO: {email}"
-            + "\n"
-            + f"DATE: `{ttime}`"
-        )
-    else:
-        lastisthis = (
+    tlink = f'https://telegra.ph/{response["path"]}'
+    lastisthis = (
+        (
             f"{header}MAIL FROM: {from_mail}"
             + "\n"
             + f"TO: {email}"
@@ -572,6 +570,16 @@ async def _(event):
             + "\n\n"
             + "**The attachments will be send to you shortly !**"
         )
+        if attch > 0
+        else (
+            f"{header}MAIL FROM: {from_mail}"
+            + "\n"
+            + f"TO: {email}"
+            + "\n"
+            + f"DATE: `{ttime}`"
+        )
+    )
+
     await tbot.edit_message(
         chatid,
         msgid,
@@ -626,7 +634,7 @@ async def _(event):
     sender = int(sender.strip())
     chatid = int(chatid.strip())
     msgid = int(msgid.strip())
-    if not event.sender_id == sender:
+    if event.sender_id != sender:
         await event.answer("You haven't send that command !")
         return
     await tbot.edit_message(chatid, msgid, "Thanks for using Luna ☺️")
@@ -645,7 +653,7 @@ async def _(event):
     sender = int(sender.strip())
     chatid = int(chatid.strip())
     msgid = int(msgid.strip())
-    if not event.sender_id == sender:
+    if event.sender_id != sender:
         await event.answer("You haven't send that command !")
         return
     await tbot.edit_message(chatid, msgid, "Okay !\nNot a problem 😉")
@@ -664,7 +672,7 @@ async def _(event):
     sender = int(sender.strip())
     chatid = int(chatid.strip())
     msgid = int(msgid.strip())
-    if not event.sender_id == sender:
+    if event.sender_id != sender:
         await event.answer("You haven't send that command !")
         return
     ttime = time.time()

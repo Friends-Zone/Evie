@@ -54,18 +54,13 @@ def register(**args):
                 return
             if check.fwd_from:
                 return
-            if check.is_group or check.is_private:
-                pass
-            else:
+            if not check.is_group and not check.is_private:
                 print("i don't work in channels")
                 return
-            if check.is_group:
-               if check.chat.megagroup:
-                  pass
-               else:
-                  print("i don't work in small chats")
-                  return
-                          
+            if check.is_group and not check.chat.megagroup:
+                print("i don't work in small chats")
+                return
+
             users = gbanned.find({})
             for c in users:
                 if check.sender_id == c["user"]:
@@ -78,8 +73,6 @@ def register(**args):
                     LOAD_PLUG.update({file_test: [func]})
             except BaseException:
                 return
-            else:
-                pass
 
         tbot.add_event_handler(wrapper, events.NewMessage(**args))
         return wrapper
@@ -121,18 +114,13 @@ def bot(**args):
                 return
             if check.fwd_from:
                 return
-            if check.is_group or check.is_private:
-                pass
-            else:
+            if not check.is_group and not check.is_private:
                 print("i don't work in channels")
                 return
-            if check.is_group:
-               if check.chat.megagroup:
-                  pass
-               else:
-                  print("i don't work in small chats")
-                  return
-                          
+            if check.is_group and not check.chat.megagroup:
+                print("i don't work in small chats")
+                return
+
             users = gbanned.find({})
             for c in users:
                 if check.sender_id == c["user"]:
@@ -145,8 +133,6 @@ def bot(**args):
                     LOAD_PLUG.update({file_test: [func]})
             except BaseException:
                 return
-            else:
-                pass
 
         tbot.add_event_handler(wrapper, events.NewMessage(**args))
         return wrapper
@@ -161,10 +147,7 @@ def get_readable_time(seconds: int) -> str:
 
     while count < 4:
         count += 1
-        if count < 3:
-            remainder, result = divmod(seconds, 60)
-        else:
-            remainder, result = divmod(seconds, 24)
+        remainder, result = divmod(seconds, 60) if count < 3 else divmod(seconds, 24)
         if seconds == 0 and remainder == 0:
             break
         time_list.append(int(result))
@@ -173,7 +156,7 @@ def get_readable_time(seconds: int) -> str:
     for x in range(len(time_list)):
         time_list[x] = str(time_list[x]) + time_suffix_list[x]
     if len(time_list) == 4:
-        ping_time += time_list.pop() + ", "
+        ping_time += f"{time_list.pop()}, "
 
     time_list.reverse()
     ping_time += ":".join(time_list)
@@ -228,8 +211,6 @@ def lunabot(**args):
                 pass
             except BaseException as e:
                 print(e)
-            else:
-                pass
 
         if not disable_edited:
             ubot.add_event_handler(wrapper, events.MessageEdited(**args))
@@ -246,17 +227,17 @@ def load_module(shortname):
         import Luna.events
 
         path = Path(f"Luna/modules/{shortname}.py")
-        name = "Luna.modules.{}".format(shortname)
+        name = f"Luna.modules.{shortname}"
         spec = importlib.util.spec_from_file_location(name, path)
         mod = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(mod)
-        print("Successfully imported " + shortname)
+        print(f"Successfully imported {shortname}")
     else:
         import importlib
         import Luna.events
 
         path = Path(f"Luna/modules/{shortname}.py")
-        name = "Luna.modules.{}".format(shortname)
+        name = f"Luna.modules.{shortname}"
         spec = importlib.util.spec_from_file_location(name, path)
         mod = importlib.util.module_from_spec(spec)
         mod.register = register
@@ -264,8 +245,8 @@ def load_module(shortname):
         mod.tbot = tbot
         mod.logger = logging.getLogger(shortname)
         spec.loader.exec_module(mod)
-        sys.modules["Luna.modules." + shortname] = mod
-        print("Successfully imported " + shortname)
+        sys.modules[f"Luna.modules.{shortname}"] = mod
+        print(f"Successfully imported {shortname}")
 
 
 path = "Luna/modules/*.py"

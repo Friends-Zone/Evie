@@ -5,9 +5,7 @@ import os
 async def sleepybot(time):
     if time.fwd_from:
         return
-    if time.sender_id == OWNER_ID:
-        pass
-    else:
+    if time.sender_id != OWNER_ID:
         return
     await time.reply("Nekobin Py In App 2")
 

@@ -81,12 +81,10 @@ async def can_change_info(message):
 async def _(event):
     if event.is_private:
         return
-    if event.is_group:
-        if not await can_change_info(message=event):
-            return
+    if event.is_group and not await can_change_info(message=event):
+        return
     chat = event.chat_id
-    args = event.pattern_match.group(1)
-    if args:
+    if args := event.pattern_match.group(1):
         if args == "on":
             sql.set_chat_setting(chat, True)
             await event.reply(
@@ -111,7 +109,7 @@ async def _(event):
 @tbot.on(events.NewMessage(pattern="^/report ?(.*)"))
 async def _(event):
     if event.is_private:
-        return  
+        return
     if await is_register_admin(event.input_chat, event.message.sender_id):
         return
 
@@ -131,11 +129,11 @@ async def _(event):
     if event.reply_to_msg_id:
         c = await event.get_reply_message()
         reported_user = c.sender_id
-        reported_user_first_name = c.sender.first_name        
+        reported_user_first_name = c.sender.first_name
         if await is_register_admin(event.input_chat, reported_user):
             await event.reply("Why are you reporting an admin ?")
             return
-        
+
         if not args:
             await event.reply("Add a reason for reporting first.")
             return
@@ -186,20 +184,18 @@ async def _(event):
         async for userr in tbot.iter_participants(
             event.chat_id, filter=ChannelParticipantsAdmins
         ):
-          try:
-            if userr.bot:
-                pass
-            else:
-                await tbot.send_message(
-                    userr.id, msg, buttons=buttons, parse_mode="html"
-                )
-                await tbot.send_message(
-                    userr.id,
-                    "**In case if the original message was deleted by the accused, a copy is sent to you as below 👇**",
-                )
-                await c.forward_to(userr.id)
-          except Exception:
-                pass
+            try:
+                if not userr.bot:
+                    await tbot.send_message(
+                        userr.id, msg, buttons=buttons, parse_mode="html"
+                    )
+                    await tbot.send_message(
+                        userr.id,
+                        "**In case if the original message was deleted by the accused, a copy is sent to you as below 👇**",
+                    )
+                    await c.forward_to(userr.id)
+            except Exception:
+                  pass
 
         try:
             await tbot.send_message(

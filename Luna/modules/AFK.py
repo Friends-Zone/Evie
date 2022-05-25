@@ -25,56 +25,40 @@ nub = random.choice(options)
 async def _(event):
     sender = await event.get_sender()
     if event.text.startswith("/afk"):
-     cmd = event.text[len("/afk ") :]
-     if cmd is not None:
-        reason = cmd
-     else:
-        reason = ""
-     fname = sender.first_name   
-     # print(reason)
-     start_time = fname
-     sql.set_afk(sender.id, reason, start_time)
-     await event.reply(
-           "{} is now AFK !".format(fname),
-           parse_mode="markdown")
-     return
+        cmd = event.text[len("/afk ") :]
+        reason = cmd if cmd is not None else ""
+        fname = sender.first_name
+        # print(reason)
+        start_time = fname
+        sql.set_afk(sender.id, reason, start_time)
+        await event.reply(f"{fname} is now AFK !", parse_mode="markdown")
+        return
     if event.text.startswith("Brb"):
-     cmd = event.text[len("Brb ") :]
-     if cmd is not None:
-        reason = cmd
-     else:
-        reason = ""
-     fname = sender.first_name
-     # print(reason)
-     start_time = fname
-     sql.set_afk(sender.id, reason, start_time)
-     await event.reply(
-           "{} is now AFK !".format(fname),
-           parse_mode="markdown")
-     return
+        cmd = event.text[len("Brb ") :]
+        reason = cmd if cmd is not None else ""
+        fname = sender.first_name
+        # print(reason)
+        start_time = fname
+        sql.set_afk(sender.id, reason, start_time)
+        await event.reply(f"{fname} is now AFK !", parse_mode="markdown")
+        return
     if event.text.startswith("brb"):
-     cmd = event.text[len("brb ") :]
-     if cmd is not None:
-        reason = cmd
-     else:
-        reason = ""
-     fname = sender.first_name     
-     first_name = fname   
-     # print(reason)
-     start_time = fname
-     sql.set_afk(sender.id, reason, start_time)
-     await event.reply(
-           "{} is now AFK !".format(fname),
-           parse_mode="markdown")
-     return
+        cmd = event.text[len("brb ") :]
+        reason = cmd if cmd is not None else ""
+        fname = sender.first_name
+        first_name = fname
+        # print(reason)
+        start_time = fname
+        sql.set_afk(sender.id, reason, start_time)
+        await event.reply(f"{fname} is now AFK !", parse_mode="markdown")
+        return
 
     if sql.is_afk(sender.id):
-       res = sql.rm_afk(sender.id)
-       if res:
-          firstname = sender.first_name
-          loda = nub.format(firstname)
-          text = f"{loda}"
-          await event.reply(text, parse_mode="markdown")
+        if res := sql.rm_afk(sender.id):
+            firstname = sender.first_name
+            loda = nub.format(firstname)
+            text = f"{loda}"
+            await event.reply(text, parse_mode="markdown")
         
 
 @tbot.on(events.NewMessage(pattern=None))
@@ -93,11 +77,9 @@ async def _(event):
             for (ent, txt) in event.get_entities_text():
                 if ent.offset != 0:
                     break
-                if isinstance(ent, types.MessageEntityMention):
-                    pass
-                elif isinstance(ent, types.MessageEntityMentionName):
-                    pass
-                else:
+                if not isinstance(
+                    ent, types.MessageEntityMention
+                ) and not isinstance(ent, types.MessageEntityMentionName):
                     return
                 c = txt
                 a = c.split()[0]
@@ -111,23 +93,19 @@ async def _(event):
     if sender == userid:
         return
 
-    if event.is_group:
-        pass
-    else:
+    if not event.is_group:
         return
 
     if sql.is_afk(userid):
         user = sql.check_afk_status(userid)
-        if not user.reason:
-            final = user.start_time
-            res = "{} is AFK !".format(final)
-            await event.reply(res, parse_mode="markdown")
-        else:
-            final = user.start_time
-            res = "{} is AFK !\nReason: {}".format(
-                final, user.reason
-            )
-            await event.reply(res, parse_mode="markdown")
+        final = user.start_time
+        res = (
+            "{} is AFK !\nReason: {}".format(final, user.reason)
+            if user.reason
+            else f"{final} is AFK !"
+        )
+
+        await event.reply(res, parse_mode="markdown")
     userid = ""  # after execution
     let = ""  # after execution
 

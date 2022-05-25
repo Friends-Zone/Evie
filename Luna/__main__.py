@@ -10,7 +10,8 @@ except Exception:
     print("Bot Token Invalid")
     exit(1)
 
-if len(argv) not in (1, 3, 4):
-    tbot.disconnect()
-else:
+if len(argv) in {1, 3, 4}:
     tbot.run_until_disconnected()
+
+else:
+    tbot.disconnect()

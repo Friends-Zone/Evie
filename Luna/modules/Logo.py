@@ -7,19 +7,12 @@ from PIL import Image, ImageDraw, ImageFont
 @register(pattern="^/logo ?(.*)")
 async def lego(event):
  quew = event.pattern_match.group(1)
- if event.sender_id == OWNER_ID:
-     pass
- else:
-     if event.is_group:
-       await event.reply('Currently This Module Only Works in my [PM](tg://user?id=1624337697)')
-       return
-     else:
-       pass
+ if event.sender_id != OWNER_ID and event.is_group:
+  await event.reply('Currently This Module Only Works in my [PM](tg://user?id=1624337697)')
+  return
  if not quew:
-       await event.reply('Provide Some Text To Draw!')
-       return
- else:
-       pass
+  await event.reply('Provide Some Text To Draw!')
+  return
  await event.reply('Drawing Text On Pic.Weit!')
  try:
     text = event.pattern_match.group(1)

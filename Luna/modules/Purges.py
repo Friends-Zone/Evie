@@ -31,11 +31,10 @@ async def purge_messages(event):
     if not reply_msg:
         await event.reply("Reply to a message to select where to start purging from.")
         return
-    messages = []
     message_id = reply_msg.id
     delete_to = event.message.id
 
-    messages.append(event.reply_to_msg_id)
+    messages = [event.reply_to_msg_id]
     for msg_id in range(message_id, delete_to + 1):
         messages.append(msg_id)
         if len(messages) == 100:
@@ -51,7 +50,7 @@ async def purge_messages(event):
         await event.reply("I can't delete messages that are too old")
         return
 
-    text = f"Purged Successfully !"
+    text = "Purged Successfully !"
     await event.respond(text, parse_mode="markdown")
 
 

@@ -83,28 +83,28 @@ async def _(event):
 @register(pattern="^/cos (.*)")
 async def _(event):
     args = int(event.pattern_match.group(1))
-    await event.reply(str(math.cos(int(args))))
+    await event.reply(str(math.cos(args)))
 
 
 @register(pattern="^/sin (.*)")
 async def _(event):
     args = int(event.pattern_match.group(1))
 
-    await event.reply(str(math.sin(int(args))))
+    await event.reply(str(math.sin(args)))
 
 
 @register(pattern="^/tan (.*)")
 async def _(event):
     args = int(event.pattern_match.group(1))
 
-    await event.reply(str(math.tan(int(args))))
+    await event.reply(str(math.tan(args)))
 
 
 @register(pattern="^/arccos (.*)")
 async def _(event):
     args = int(event.pattern_match.group(1))
 
-    await event.reply(str(math.acos(int(args))))
+    await event.reply(str(math.acos(args)))
 
 
 @register(pattern="^/arcsin (.*)")
@@ -112,7 +112,7 @@ async def _(event):
     
     args = int(event.pattern_match.group(1))
 
-    await event.reply(str(math.asin(int(args))))
+    await event.reply(str(math.asin(args)))
 
 
 @register(pattern="^/arctan (.*)")
@@ -120,7 +120,7 @@ async def _(event):
     
     args = int(event.pattern_match.group(1))
 
-    await event.reply(str(math.atan(int(args))))
+    await event.reply(str(math.atan(args)))
 
 
 @register(pattern="^/abs (.*)")
@@ -128,7 +128,7 @@ async def _(event):
     
     args = int(event.pattern_match.group(1))
 
-    await event.reply(str(math.fabs(int(args))))
+    await event.reply(str(math.fabs(args)))
 
 
 @register(pattern="^/log (.*)")
@@ -136,7 +136,7 @@ async def _(event):
     
     args = int(event.pattern_match.group(1))
 
-    await event.reply(str(math.log(int(args))))
+    await event.reply(str(math.log(args)))
 
 file_help = os.path.basename(__file__)
 file_help = file_help.replace(".py", "")

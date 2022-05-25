@@ -6,14 +6,9 @@ from Luna.events import register
 async def echo(event):
   if event.fwd_from:
         return
-  if event.sender_id == OWNER_ID:
-        pass
-  elif event.sender_id in SUDO_USERS:
-        pass
-  elif event.sender_id in DEV_USERS:
-        pass
-  else:
-        return
+  if (event.sender_id != OWNER_ID and event.sender_id not in SUDO_USERS
+      and event.sender_id not in DEV_USERS):
+    return
   if event.reply_to_msg_id:
           await event.delete()
           previous_message = await event.get_reply_message()

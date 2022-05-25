@@ -11,18 +11,15 @@ chat = -1001309757591
 async def sleepybot(time):
     if time.fwd_from:
         return
-    if time.sender_id == OWNER_ID:
-        pass
-    else:
+    if time.sender_id != OWNER_ID:
         return
-    message = time.pattern_match.group(1)
-    if message:
-       counter = int(time.pattern_match.group(1))
-       await time.reply(f"I am sulking and snoozing....for {counter}'secs")
-       sleep(counter)
+    if message := time.pattern_match.group(1):
+        counter = int(time.pattern_match.group(1))
+        await time.reply(f"I am sulking and snoozing....for {counter}'secs")
+        sleep(counter)
     else:
-       await time.reply(f"Ok Boss GoodNight!")
-       sleep(10)
+        await time.reply("Ok Boss GoodNight!")
+        sleep(10)
 
 def convert(speed):
     return round(int(speed)/1048576, 2)
@@ -30,10 +27,8 @@ def convert(speed):
 @register(pattern="^/restart$")
 async def _(event):
     chat = -1001309757591
-    if event.sender_id == OWNER_ID:
-        pass
-    else:
-       return
+    if event.sender_id != OWNER_ID:
+        return
     if event.fwd_from:
         return
     await event.client.send_message(chat, "#RESTART \n" "Bot Restarted")
@@ -43,13 +38,11 @@ async def _(event):
 
 @register(pattern="^/speedtest ?(.*)")
 async def seedtest(event):
-    if event.sender_id == OWNER_ID:
-        pass
-    elif event.sender_id in SUDO_USERS:
-        pass
-    elif event.sender_id in DEV_USERS:
-        pass
-    else:
+    if (
+        event.sender_id != OWNER_ID
+        and event.sender_id not in SUDO_USERS
+        and event.sender_id not in DEV_USERS
+    ):
         return
     message = event.pattern_match.group(1)
     speed = speedtest.Speedtest()

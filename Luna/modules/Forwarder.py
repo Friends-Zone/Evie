@@ -48,15 +48,10 @@ async def frwder(event):
 
 @bot(pattern="^/post ?(.*)")
 async def post(event):
-    if event.sender_id == OWNER_ID:
-         pass
-    else:
-         return
+    if event.sender_id != OWNER_ID:
+        return
     quew = event.pattern_match.group(1)
-    if not quew:
-        chat = -1001309757591
-    else:
-        chat = quew
+    chat = quew or -1001309757591
     if event.reply_to_msg_id:
         previous_message = await event.get_reply_message()
         text = previous_message

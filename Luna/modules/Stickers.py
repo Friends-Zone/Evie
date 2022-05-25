@@ -69,9 +69,7 @@ async def _(event):
     if event.is_group:
         if await is_register_admin(event.input_chat, event.message.sender_id):
             pass
-        elif event.chat_id == iid and event.sender_id == userss:
-            pass
-        else:
+        elif event.chat_id != iid or event.sender_id != userss:
             return
 
     if not event.is_reply:
@@ -109,10 +107,7 @@ async def _(event):
 
 
 def find_instance(items, class_or_tuple):
-    for item in items:
-        if isinstance(item, class_or_tuple):
-            return item
-    return None
+    return next((item for item in items if isinstance(item, class_or_tuple)), None)
 
 
 DEFAULTUSER = "Julia"
@@ -126,8 +121,7 @@ async def _(event):
         return
     reply_message = await event.get_reply_message()
     sticker_emoji = "🔥"
-    input_str = event.pattern_match.group(1)
-    if input_str:
+    if input_str := event.pattern_match.group(1):
         sticker_emoji = input_str
 
     user = await event.get_sender()
@@ -212,7 +206,7 @@ async def _(event):
             if response.text == FILLED_UP_DADDY:
                 while response.text == FILLED_UP_DADDY:
                     pack += 1
-                    prevv = int(pack) - 1
+                    prevv = pack - 1
                     packname = f"{first_name}'s Sticker Vol.{pack}"
                     packshortname = f"Vol_{pack}_with_{userid}"
 
@@ -314,23 +308,20 @@ async def _(event):
     if event.is_group:
         if await is_register_admin(event.input_chat, event.message.sender_id):
             pass
-        elif event.chat_id == iid and event.sender_id == userss:
-            pass
-        else:
+        elif event.chat_id != iid or event.sender_id != userss:
             return
     if not event.is_reply:
         await event.reply("Reply to a sticker to extract image from it.")
         return
     reply_message = await event.get_reply_message()
-    file_ext_ns_ion = "sticker.png"
     file = await tbot.download_file(reply_message.media)
-    is_a_s = is_it_animated_sticker(reply_message)
-    if is_a_s:
+    if is_a_s := is_it_animated_sticker(reply_message):
         await event.reply("I can't extract image from animated stickers")
     elif not is_message_image(reply_message):
         await event.reply("Invalid message type")
         return
     else:
+        file_ext_ns_ion = "sticker.png"
         with BytesIO(file) as mem_file, BytesIO() as sticker:
             resize_image(mem_file, sticker)
             sticker.seek(0)
@@ -363,9 +354,11 @@ def is_message_image(message):
     if message.media:
         if isinstance(message.media, MessageMediaPhoto):
             return True
-        if message.media.document:
-            if message.media.document.mime_type.split("/")[0] == "image":
-                return True
+        if (
+            message.media.document
+            and message.media.document.mime_type.split("/")[0] == "image"
+        ):
+            return True
         return False
     return False
 
@@ -395,7 +388,6 @@ def resize_image(image, save_locaton):
     https://github.com/skittles9823/SkittBot/blob/master/tg_bot/modules/stickers.py
     """
     im = Image.open(image)
-    maxsize = (512, 512)
     if (im.width and im.height) < 512:
         size1 = im.width
         size2 = im.height
@@ -412,15 +404,13 @@ def resize_image(image, save_locaton):
         sizenew = (size1new, size2new)
         im = im.resize(sizenew)
     else:
+        maxsize = (512, 512)
         im.thumbnail(maxsize)
     im.save(save_locaton, "PNG")
 
 
 def find_instance(items, class_or_tuple):
-    for item in items:
-        if isinstance(item, class_or_tuple):
-            return item
-    return None
+    return next((item for item in items if isinstance(item, class_or_tuple)), None)
 
 
 @register(pattern="^/searchsticker (.*)")
@@ -432,9 +422,7 @@ async def _(event):
     if event.is_group:
         if await is_register_admin(event.input_chat, event.message.sender_id):
             pass
-        elif event.chat_id == iid and event.sender_id == userss:
-            pass
-        else:
+        elif event.chat_id != iid or event.sender_id != userss:
             return
     input_str = event.pattern_match.group(1)
     combot_stickers_url = "https://combot.org/telegram/stickers?q="
@@ -462,9 +450,7 @@ async def _(event):
         if event.is_group:
             if await is_register_admin(event.input_chat, event.message.sender_id):
                 pass
-            elif event.chat_id == iid and event.sender_id == userss:
-                pass
-            else:
+            elif event.chat_id != iid or event.sender_id != userss:
                 return
 
         if not event.is_reply:
@@ -506,9 +492,7 @@ async def _(event):
             )
         ).documents
         for c in sresult:
-            if int(c.id) == int(stickerset_attr.stickerset.id):
-                pass
-            else:
+            if int(c.id) != int(stickerset_attr.stickerset.id):
                 await kanga.edit(
                     "This sticker is already removed from your personal sticker pack."
                 )
@@ -540,7 +524,7 @@ async def _(event):
 
             await kanga.edit("`Deleting ...`")
             response = await bot_conv.get_response()
-            if not "I have deleted" in response.text:
+            if "I have deleted" not in response.text:
                 await tbot.edit_message(
                     kanga, f"**FAILED**! @Stickers replied: {response.text}"
                 )

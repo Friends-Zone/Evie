@@ -7,9 +7,7 @@ k = 'News Py Files In Another Repo'
 async def sleepybot(time):
     if time.fwd_from:
         return
-    if time.sender_id == OWNER_ID:
-        pass
-    else:
+    if time.sender_id != OWNER_ID:
         return
     await time.reply("News Py In App 2")
 

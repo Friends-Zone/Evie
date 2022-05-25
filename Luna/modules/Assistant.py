@@ -45,11 +45,12 @@ async def _(event):
             }
             data = open(required_file_name, "rb").read()
             response = requests.post(
-                IBM_WATSON_CRED_URL + "/v1/recognize",
+                f"{IBM_WATSON_CRED_URL}/v1/recognize",
                 headers=headers,
                 data=data,
                 auth=("apikey", IBM_WATSON_CRED_PASSWORD),
             )
+
             r = response.json()
             if "results" in r:
                 # process the json to appropriate string format
@@ -60,7 +61,7 @@ async def _(event):
                     alternatives = alternative["alternatives"][0]
                     transcript_response += " " + str(alternatives["transcript"])
                 if transcript_response != "":
-                    string_to_show = "{}".format(transcript_response)
+                    string_to_show = f"{transcript_response}"
                     appid = WOLFRAM_ID
                     server = f"https://api.wolframalpha.com/v1/spoken?appid={appid}&i={string_to_show}"
                     res = get(server)
@@ -68,11 +69,7 @@ async def _(event):
                     try:
                         tts = gTTS(answer, tld="com", lang="en")
                         tts.save("results.mp3")
-                    except AssertionError:
-                        return
-                    except ValueError:
-                        return
-                    except RuntimeError:
+                    except (AssertionError, ValueError, RuntimeError):
                         return
                     except gTTSError:
                         return
@@ -92,11 +89,7 @@ async def _(event):
                         answer = "Sorry I can't understand"
                         tts = gTTS(answer, tld="com", lang="en")
                         tts.save("results.mp3")
-                    except AssertionError:
-                        return
-                    except ValueError:
-                        return
-                    except RuntimeError:
+                    except (AssertionError, ValueError, RuntimeError):
                         return
                     except gTTSError:
                         return

@@ -26,7 +26,7 @@ from Luna.events import bot as register
 async def _(event):
     if event.fwd_from:
         return
-    
+
     start = datetime.now()
     if not os.path.isdir(TEMP_DOWNLOAD_DIRECTORY):
         os.makedirs(TEMP_DOWNLOAD_DIRECTORY)
@@ -47,11 +47,12 @@ async def _(event):
             }
             data = open(required_file_name, "rb").read()
             response = requests.post(
-                IBM_WATSON_CRED_URL + "/v1/recognize",
+                f"{IBM_WATSON_CRED_URL}/v1/recognize",
                 headers=headers,
                 data=data,
                 auth=("apikey", IBM_WATSON_CRED_PASSWORD),
             )
+
             r = response.json()
             if "results" in r:
                 # process the json to appropriate string format

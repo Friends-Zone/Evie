@@ -165,8 +165,8 @@ async def fetch_info(replied_user, event):
             if last_name
             else ("This User has no Last Name")
         )
-        username = "@{}".format(username) if username else ("This User has no Username")
-        user_bio = "This User has no About" if not user_bio else user_bio
+        username = f"@{username}" if username else "This User has no Username"
+        user_bio = user_bio or "This User has no About"
 
         caption = "<b>USER INFO:</b> \n"
         caption += f"First Name: {first_name} \n"
@@ -182,7 +182,7 @@ async def fetch_info(replied_user, event):
         users = gbanned.find({})
         for fuckers in users:
             gid = fuckers["user"]
-        if not user_id in SUDO_USERS and not user_id == OWNER_ID:
+        if user_id not in SUDO_USERS and user_id != OWNER_ID:
             if str(user_id) == str(gid):
                 caption += "<b>Gbanned:</b> Yes\n"
                 to_check = get_reason(id=user_id)
@@ -227,11 +227,9 @@ async def chatidgetter(chat):
     if chat.is_group:
         if await is_register_admin(chat.input_chat, chat.message.sender_id):
             pass
-        elif chat.chat_id == iid and chat.sender_id == userss:
-            pass
-        else:
+        elif chat.chat_id != iid or chat.sender_id != userss:
             return
-    await chat.reply("Chat ID: `" + str(chat.chat_id) + "`")
+    await chat.reply(f"Chat ID: `{str(chat.chat_id)}`")
 
 
 @register(pattern="^/runs$")
@@ -268,10 +266,7 @@ def get_readable_time(seconds: int) -> str:
 
     while count < 4:
         count += 1
-        if count < 3:
-            remainder, result = divmod(seconds, 60)
-        else:
-            remainder, result = divmod(seconds, 24)
+        remainder, result = divmod(seconds, 60) if count < 3 else divmod(seconds, 24)
         if seconds == 0 and remainder == 0:
             break
         time_list.append(int(result))
@@ -280,7 +275,7 @@ def get_readable_time(seconds: int) -> str:
     for x in range(len(time_list)):
         time_list[x] = str(time_list[x]) + time_suffix_list[x]
     if len(time_list) == 4:
-        ping_time += time_list.pop() + ", "
+        ping_time += f"{time_list.pop()}, "
 
     time_list.reverse()
     ping_time += ":".join(time_list)
@@ -296,7 +291,7 @@ async def ping(event):
     message = await event.reply("Pinging_")
     end_time = datetime.datetime.now()
     pingtime = end_time - start_time
-    telegram_ping = str(round(pingtime.total_seconds(), 2)) + "s"
+    telegram_ping = f"{str(round(pingtime.total_seconds(), 2))}s"
     uptime = get_readable_time((time.time() - StartTime))
     await message.edit(
         "PONG !\n"
@@ -322,10 +317,7 @@ async def _(event):
 async def _(event):
     import requests, json
     fone = event.pattern_match.group(1)
-    if "+" in fone:
-         number = fone
-    else:
-         number = f"+91{fone}"
+    number = fone if "+" in fone else f"+91{fone}"
     key = "fe65b94e78fc2e3234c1c6ed1b771abd"
     api = (
         "http://apilayer.net/api/validate?access_key="
@@ -343,7 +335,7 @@ async def _(event):
     carrier = obj["carrier"]
     line_type = obj["line_type"]
     validornot = obj["valid"]
-    reply = "**Valid:** " + str(validornot)
+    reply = f"**Valid:** {str(validornot)}"
     reply += "\n**Phone number:** " + str(number)
     if country_code:
          reply += "\n**Country:** " + str(country_code)
@@ -359,36 +351,33 @@ async def _(event):
 
 @register(pattern="^/sudolist")
 async def _(event):
-   if event.sender_id == OWNER_ID:
+    if event.sender_id == OWNER_ID:
         pass
-   elif event.sender_id in SUDO_USERS or event.sender_id in DEV_USERS:
-        pass
-   else:
+    elif event.sender_id not in SUDO_USERS and event.sender_id not in DEV_USERS:
         return
-   reply = "**Owner 💞:**\n"
-   replied_user = await tbot(GetFullUserRequest(OWNER_ID))
-   h = replied_user.user.first_name
-   reply += "• [{}](tg://user?id={})\n".format(h, OWNER_ID)
-   k = SUDO_USERS
-   reply += "**Sudo_Users 💫:**\n"
-   for m in k:
-        try:
-           replied_user = await tbot(GetFullUserRequest(m))
-           h = replied_user.user.first_name
-           reply += f"{h}\n"
-        except Exception:
-           reply += f"`{m}`\n"
-   d = DEV_USERS
-   reply += "\n**DEV_USERS ⚔️:**\n"
-   for v in d:
-        try:
-           replied_user = await tbot(GetFullUserRequest(v))
-           g = replied_user.user.first_name
-           reply += f"{g}\n"
-        except Exception:
-           pass
-   await event.client.send_message(
-                event.chat_id, reply)
+    replied_user = await tbot(GetFullUserRequest(OWNER_ID))
+    h = replied_user.user.first_name
+    reply = "**Owner 💞:**\n" + "• [{}](tg://user?id={})\n".format(h, OWNER_ID)
+    k = SUDO_USERS
+    reply += "**Sudo_Users 💫:**\n"
+    for m in k:
+         try:
+            replied_user = await tbot(GetFullUserRequest(m))
+            h = replied_user.user.first_name
+            reply += f"{h}\n"
+         except Exception:
+            reply += f"`{m}`\n"
+    d = DEV_USERS
+    reply += "\n**DEV_USERS ⚔️:**\n"
+    for v in d:
+         try:
+            replied_user = await tbot(GetFullUserRequest(v))
+            g = replied_user.user.first_name
+            reply += f"{g}\n"
+         except Exception:
+            pass
+    await event.client.send_message(
+                 event.chat_id, reply)
 
 file_help = os.path.basename(__file__)
 file_help = file_help.replace(".py", "")
